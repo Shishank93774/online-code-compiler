@@ -1,15 +1,8 @@
-import './App.css';
-import EditorWindow from './components/EditorWindow';
-
+import "./App.css";
+import Landing from "./components/Landing";
 
 function App() {
-  return (
-    <>
-      App
-      <EditorWindow>
-      </EditorWindow>
-    </>
-  );
+  return <Landing />;
 }
 
 export default App;
