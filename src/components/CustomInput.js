@@ -6,7 +6,7 @@ const CustomInput = ({ customInput, setCustomInput }) => {
     <>
       {" "}
       <textarea
-        rows="12"
+        rows="6"
         value={customInput}
         onChange={(e) => setCustomInput(e.target.value)}
         placeholder={`Custom input`}
