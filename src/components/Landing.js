@@ -37,7 +37,7 @@ let items = [1, 2, 3, 4, 5, 7, 8, 9];
 console.log(binary_Search(items, 3));   
 console.log(binary_Search(items, 5));
 console.log(binary_Search(items, 8));
-console.log(binary_Search(items, 100));
+console.log(binary_Search(items, 100));   
 `;
 
 const Landing = () => {
