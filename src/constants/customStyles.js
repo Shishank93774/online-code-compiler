@@ -4,7 +4,7 @@ export const customStyles = {
     width: "100%",
     maxWidth: "15rem",
     minWidth: "12rem",
-    borderRadius: "12px",
+    borderRadius: "5px",
     color: "#000",
     fontSize: ".9rem",
     lineHeight: "1.8rem",

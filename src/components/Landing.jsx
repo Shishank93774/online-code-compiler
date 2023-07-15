@@ -1,68 +1,84 @@
 import React, { useEffect, useState } from "react";
-import CodeEditorWindow from "./CodeEditorWindow";
 import axios from "axios";
 import { classnames } from "../utils/general";
 import { languageOptions } from "../constants/languageOptions";
-
+import { defineTheme } from "../lib/defineTheme";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// import useKeyPress from "../hooks/useKeyPress";
 
-import { defineTheme } from "../lib/defineTheme";
-import useKeyPress from "../hooks/useKeyPress";
-import Footer from "./Footer";
+
+import LanguagesDropdown from "./LanguagesDropdown";
+import ThemeDropdown from "./ThemeDropdown";
+
+import CodeEditorWindow from "./CodeEditorWindow";
 import OutputWindow from "./OutputWindow";
 import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
-import ThemeDropdown from "./ThemeDropdown";
-import LanguagesDropdown from "./LanguagesDropdown";
+
+import Footer from "./Footer";
 
 const defaultCode = `/*
 Compiler is ready to work, START CODING in your Favorite LANGUAGE and best THEMES
 NO NEED TO WORRY ABOUT THESE.... ALL ARE COMMENTS...
 */
-function binary_Search(items, value){
-  let firstIndex  = 0, lastIndex   = items.length - 1;
-  let middleIndex;
-  while(firstIndex <= lastIndex){
-    middleIndex = Math.floor(firstIndex + (lastIndex - firstIndex)/2);
-    if(items[middleIndex] < value){
-      firstIndex = middleIndex + 1;
-    }else if(items[middleIndex] > value){
-      lastIndex = middleIndex - 1;
-    }else return middleIndex;
+#include<iostream>
+
+using namespace std;
+
+int binarySearch(int arr[], int n, int x){
+  int l = 0, r = n-1;
+  while(l<=r){
+    int mid = l + (r-l)/2;
+
+    if(arr[mid] < x){  // Towards Right
+      l = mid + 1;
+    }else if(arr[mid] > x) { // Towards Left
+      r = mid - 1;
+    }else { // Got It 
+      return mid;
+    }
   }
   return -1;
 }
-let items = [1, 2, 3, 4, 5, 7, 8, 9];
-console.log(binary_Search(items, 3));   
-console.log(binary_Search(items, 5));
-console.log(binary_Search(items, 8));
-console.log(binary_Search(items, 100));   
+
+int main(){
+  int arr[] = {1, 2, 3, 4, 6, 8, 9, 11, 15};
+
+  int n = sizeof(arr)/sizeof(arr[0]);
+
+  cout<<binarySearch(arr, n, 2)<<endl;
+  cout<<binarySearch(arr, n, 5)<<endl;
+  cout<<binarySearch(arr, n, 8)<<endl;
+  cout<<binarySearch(arr, n, 15)<<endl;
+  return 0;
+}
 `;
 
 const Landing = () => {
+  const [language, setLanguage] = useState(languageOptions[7]); // Default in C++
+  const [theme, setTheme] = useState("cobalt");
+
   const [code, setCode] = useState(defaultCode);
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
-  const [theme, setTheme] = useState("cobalt");
-  const [language, setLanguage] = useState(languageOptions[0]);
 
-  const enterPress = useKeyPress("Enter");
-  const ctrlPress = useKeyPress("Control");
+  // const enterPress = useKeyPress("Enter");
+  // const ctrlPress = useKeyPress("Control");
 
   const onSelectChange = (sl) => {
-    console.log("selected Option...", sl);
+    // console.log("selected Option...", sl);
     setLanguage(sl);
   };
 
-  useEffect(() => {
-    if (enterPress && ctrlPress) {
-      console.log("enterPress", enterPress);
-      console.log("ctrlPress", ctrlPress);
-      handleCompile();
-    }
-  }, [ctrlPress, enterPress]);
+  // useEffect(() => {
+  //   if (enterPress && ctrlPress) {
+  // console.log("enterPress", enterPress);
+  // console.log("ctrlPress", ctrlPress);
+  //     handleCompile();
+  //   }
+  // }, [ctrlPress, enterPress]);
   const onChange = (action, data) => {
     switch (action) {
       case "code": {
@@ -98,7 +114,7 @@ const Landing = () => {
     axios
       .request(options)
       .then(function (response) {
-        console.log("res.data", response.data);
+        // console.log("res.data", response.data);
         const token = response.data.token;
         checkStatus(token);
       })
@@ -106,17 +122,16 @@ const Landing = () => {
         let error = err.response ? err.response.data : err;
         // get error status
         let status = err.response.status;
-        console.log("status", status);
+        // console.log("status", status);
         if (status === 429) {
-          console.log("too many requests", status);
-
+          // console.log("too many requests", status);
           showErrorToast(
             `Quota of 100 requests exceeded for the Day! Please read the blog on freeCodeCamp to learn how to setup your own RAPID API Judge0!`,
             10000
           );
         }
         setProcessing(false);
-        console.log("catch block...", error);
+        // console.log("catch block...", error);
       });
   };
 
@@ -145,11 +160,11 @@ const Landing = () => {
         setProcessing(false);
         setOutputDetails(response.data);
         showSuccessToast(`Compiled Successfully!`);
-        console.log("response.data", response.data);
+        // console.log("response.data", response.data);
         return;
       }
     } catch (err) {
-      console.log("err", err);
+      // console.log("err", err);
       setProcessing(false);
       showErrorToast();
     }
@@ -157,7 +172,7 @@ const Landing = () => {
 
   function handleThemeChange(th) {
     const theme = th;
-    console.log("theme...", theme);
+    // console.log("theme...", theme);
 
     if (["light", "vs-dark"].includes(theme.value)) {
       setTheme(theme);
@@ -165,9 +180,11 @@ const Landing = () => {
       defineTheme(theme.value).then((_) => setTheme(theme));
     }
   }
+
   useEffect(() => {
-    defineTheme("oceanic-next").then((_) =>
-      setTheme({ value: "oceanic-next", label: "Oceanic Next" })
+    // Can change for default Language
+    defineTheme("monokai").then((_) =>
+      setTheme({ value: "monokai", label: "Monokai" })
     );
   }, []);
 
@@ -265,7 +282,7 @@ const Landing = () => {
             />
             <button
               onClick={handleCompile}
-              disabled={!code}
+              disabled={!code || processing} // improved multiple compile clicks
               className={classnames(
                 "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0",
                 !code ? "opacity-50" : ""
