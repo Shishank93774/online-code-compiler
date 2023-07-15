@@ -119,10 +119,10 @@ const Landing = () => {
         checkStatus(token);
       })
       .catch((err) => {
-        // let error = err.response ? err.response.data : err;
+        let error = err.response ? err.response.data : err;
         // get error status
         let status = err.response?.status;
-        // console.log("status", status);
+        console.log("status", status);
         if (status === 429) {
           // console.log("too many requests", status);
           showErrorToast(
@@ -131,7 +131,7 @@ const Landing = () => {
           );
         }
         setProcessing(false);
-        // console.log("catch block...", error);
+        console.log("catch block...", error);
       });
   };
 
