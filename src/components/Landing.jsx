@@ -119,7 +119,7 @@ const Landing = () => {
         checkStatus(token);
       })
       .catch((err) => {
-        let error = err.response ? err.response.data : err;
+        // let error = err.response ? err.response.data : err;
         // get error status
         let status = err.response.status;
         // console.log("status", status);
